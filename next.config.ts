@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Cabeceras de seguridad + anti-cache
+  // Cabeceras de seguridad
   async headers() {
     return [
       {
@@ -20,30 +20,6 @@ const nextConfig: NextConfig = {
           { key: 'X-Frame-Options',           value: 'DENY' },
           { key: 'Referrer-Policy',           value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy',        value: 'camera=(), microphone=(), geolocation=()' },
-        ],
-      },
-      {
-        source: '/tramite/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
-          { key: 'Pragma',        value: 'no-cache' },
-          { key: 'Expires',       value: '0' },
-        ],
-      },
-      {
-        source: '/pago/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
-          { key: 'Pragma',        value: 'no-cache' },
-          { key: 'Expires',       value: '0' },
-        ],
-      },
-      {
-        source: '/verificar/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, proxy-revalidate' },
-          { key: 'Pragma',        value: 'no-cache' },
-          { key: 'Expires',       value: '0' },
         ],
       },
     ]

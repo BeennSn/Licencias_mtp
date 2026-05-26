@@ -53,7 +53,7 @@ export const INSPECTION_STATES: ApplicationStatus[] = [
 export const TRAMITE_STEPS = [
   { id: 1, label: 'Validar RUC',    description: 'Consulta SUNAT' },
   { id: 2, label: 'Subir Plano',    description: 'Documento del local' },
-  { id: 3, label: 'Pagar Licencia', description: 'S/. 0.50 — Mercado Pago' },  // CAMBIAR A 180.00
+  { id: 3, label: 'Pagar Licencia', description: 'S/. 180.00 — Mercado Pago' },
 ] as const
 
-export const LICENCIA_AMOUNT = 0.50 // CAMBIAR A 180.00 CUANDO VAYAS A PRODUCCIÓN REAL
+export const LICENCIA_AMOUNT = 180.00

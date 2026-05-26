@@ -182,7 +182,7 @@ export default function HomePage() {
             <ArrowRight size={18} />
           </Link>
           <p className="text-xs text-slate-600">
-            Derecho de trámite: S/. 0.50 — Pago único a través de Mercado Pago
+            Derecho de trámite: S/. 180.00 — Pago único a través de Mercado Pago
           </p>
         </div>
       </section>

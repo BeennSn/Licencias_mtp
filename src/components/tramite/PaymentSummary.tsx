@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
-import { YapePayment } from '@/components/tramite/YapePayment'
 import { formatSoles } from '@/lib/utils/formatters'
 import { LICENCIA_AMOUNT } from '@/lib/utils/stateMachine'
-import { CreditCard, Shield, Building2, MapPin, FileText, Smartphone, ChevronRight } from 'lucide-react'
+import { CreditCard, Shield, Building2, MapPin, FileText, ChevronRight } from 'lucide-react'
 
 interface PaymentSummaryProps {
   applicationId: string
@@ -24,18 +22,15 @@ export function PaymentSummary({
   address,
   documentUploaded,
 }: PaymentSummaryProps) {
-  const router = useRouter()
-  const [method, setMethod] = useState<'checkout' | 'yape' | null>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError]     = useState<string | null>(null)
 
-  const handleCheckoutRedirect = async () => {
+  const handlePay = async () => {
     setLoading(true)
     setError(null)
-    setMethod('checkout')
 
     try {
-      const res = await fetch('/api/mercadopago/crear-preferencia', {
+      const res  = await fetch('/api/mercadopago/crear-preferencia', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ applicationId }),
@@ -45,27 +40,16 @@ export function PaymentSummary({
 
       if (!res.ok) {
         setError(data.error ?? 'Error al generar el enlace de pago.')
-        setMethod(null)
         return
       }
 
+      // Redirigir a Checkout Pro de Mercado Pago
       window.location.href = data.checkoutUrl
     } catch {
       setError('Error de red. Por favor intenta nuevamente.')
-      setMethod(null)
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleYapeSuccess = (trackingCode: string) => {
-    sessionStorage.removeItem('mpt_application_id')
-    sessionStorage.removeItem('mpt_sunat_data')
-    sessionStorage.removeItem('mpt_doc_url')
-
-    setTimeout(() => {
-      router.push(`/verificar/${trackingCode}`)
-    }, 2500)
   }
 
   return (
@@ -121,67 +105,34 @@ export function PaymentSummary({
         </div>
       </Card>
 
-      {/* Métodos de pago */}
-      {method === 'yape' ? (
-        <YapePayment
-          applicationId={applicationId}
-          businessName={businessName}
-          onSuccess={handleYapeSuccess}
-          onBack={() => setMethod(null)}
-        />
-      ) : (
-        <div className="space-y-3">
-          <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold">
-            Selecciona un método de pago
-          </p>
-
-          <Button
-            onClick={handleCheckoutRedirect}
-            loading={loading && method === 'checkout'}
-            disabled={!documentUploaded}
-            size="lg"
-            className="w-full"
-            id="btn-pagar-mercadopago"
-            iconEnd={<ChevronRight size={18} />}
-            icon={<CreditCard size={18} />}
-          >
-            {loading && method === 'checkout'
-              ? 'Redirigiendo a Mercado Pago...'
-              : 'Tarjeta crédito/débito — Mercado Pago'}
-          </Button>
-
-          <Button
-            onClick={() => setMethod('yape')}
-            disabled={!documentUploaded}
-            size="lg"
-            variant="secondary"
-            className="w-full"
-            id="btn-pagar-yape"
-            iconEnd={<ChevronRight size={18} />}
-            icon={<Smartphone size={18} />}
-          >
-            Yape — Código QR
-          </Button>
-
-          {!documentUploaded && (
-            <p className="text-center text-xs text-slate-500">
-              Debes subir el plano del local antes de proceder al pago.
-            </p>
-          )}
-        </div>
-      )}
-
       {/* Seguridad */}
-      {method !== 'yape' && (
-        <div className="flex items-center gap-2 text-xs text-slate-500">
-          <Shield size={14} className="text-emerald-400" />
-          <span>Pago procesado de forma segura por <strong className="text-slate-300">Mercado Pago</strong>. MPT no almacena datos de tu tarjeta.</span>
-        </div>
-      )}
+      <div className="flex items-center gap-2 text-xs text-slate-500">
+        <Shield size={14} className="text-emerald-400" />
+        <span>Pago procesado de forma segura por <strong className="text-slate-300">Mercado Pago</strong>. MPT no almacena datos de tu tarjeta.</span>
+      </div>
 
       {error && (
         <p className="text-sm text-red-400 flex gap-2">
           <span>⚠</span> {error}
+        </p>
+      )}
+
+      <Button
+        onClick={handlePay}
+        loading={loading}
+        disabled={!documentUploaded}
+        size="lg"
+        className="w-full"
+        id="btn-pagar-mercadopago"
+        iconEnd={<ChevronRight size={18} />}
+        icon={<CreditCard size={18} />}
+      >
+        {loading ? 'Redirigiendo a Mercado Pago...' : `Pagar ${formatSoles(LICENCIA_AMOUNT)} con Mercado Pago`}
+      </Button>
+
+      {!documentUploaded && (
+        <p className="text-center text-xs text-slate-500">
+          Debes subir el plano del local antes de proceder al pago.
         </p>
       )}
     </div>

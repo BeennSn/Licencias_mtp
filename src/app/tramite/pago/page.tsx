@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { PaymentTabs } from '@/components/tramite/PaymentTabs'
+import { PaymentSummary } from '@/components/tramite/PaymentSummary'
 import { type SunatRucResponse } from '@/types/sunat.types'
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -41,12 +41,12 @@ export default function PagoPage() {
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-bold gradient-text">Paso 3: Pago de la Licencia</h1>
         <p className="text-slate-400 text-sm">
-          Elige tu método de pago y completa el trámite en esta misma página.
-          Al confirmar se generará tu código de seguimiento.
+          Revisa el resumen y procede al pago seguro con Mercado Pago.
+          Al completar el pago se generará tu código de seguimiento.
         </p>
       </div>
 
-      <PaymentTabs
+      <PaymentSummary
         applicationId={appId}
         businessName={sunatData.razonSocial}
         ruc={sunatData.ruc}

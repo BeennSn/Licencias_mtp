@@ -4,7 +4,8 @@ import { createSupabaseServiceClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const { applicationId } = await request.json()
+    const body = await request.json()
+    const { applicationId } = body
 
     if (!applicationId) {
       return NextResponse.json(
@@ -52,13 +53,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       preferenceId:  preference.id,
       checkoutUrl:   isProduction ? preference.init_point : preference.sandbox_init_point,
-    }, {
-      headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store',
-      },
     })
   } catch (error) {
     console.error('[MP crear-preferencia]', error)
