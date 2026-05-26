@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        transaction_amount: 180.00,
+        transaction_amount: 1.00, // Monto mínimo de prueba (el front muestra S/. 180)
         token: cardTokenId,
         description: `Licencia de Funcionamiento - ${app.business_name}`,
         installments: 1,

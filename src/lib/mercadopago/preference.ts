@@ -29,7 +29,7 @@ export async function createMercadoPagoPreference(
         description: `Licencia para: ${businessName} — Municipalidad Provincial de Trujillo`,
         quantity: 1,
         currency_id: 'PEN',
-        unit_price: 180.00,
+        unit_price: 1.00, // Monto mínimo de prueba (el front muestra S/. 180)
       },
     ],
     payer: payerEmail ? { email: payerEmail } : undefined,
